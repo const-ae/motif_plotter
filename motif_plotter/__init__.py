@@ -87,12 +87,12 @@ class ConsensusMotifPlotter:
     @classmethod
     def from_importance_scoring(cls, value):
         return cls([['A', 'C', 'T', 'G']] * len(value.Sequence), value.Scores,
-                   [['#cc0000', '#0000cc', '#008000','#ffb300']]* len(value.Sequence))
+                   [['#008000', '#0000cc', '#cc0000','#ffb300']]* len(value.Sequence))
 
     @classmethod
     def from_bio_motif(cls, motif, scale_info_content=True):
         n_elem = len(motif)
-        colors_scheme = {'G': '#ffb300', 'T': '#008000', 'C': '#0000cc', 'A': '#cc0000'}
+        colors_scheme = {'G': '#ffb300', 'A': '#008000', 'C': '#0000cc', 'T': '#cc0000'}
         bases = ['A', 'T', 'G', 'C']
         if scale_info_content:
             rel_info = calc_relative_information(motif)
