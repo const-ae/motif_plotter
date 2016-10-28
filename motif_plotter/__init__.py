@@ -5,7 +5,8 @@ from matplotlib.transforms import Affine2D
 from motif_plotter.information_helper import *
 
 
-def make_text_elements(text, x=0.0, y=0.0, width=1.0, height=1.0, color='blue', edgecolor="black", font = FontProperties(family='monospace')):
+def make_text_elements(text, x=0.0, y=0.0, width=1.0, height=1.0, color='blue', edgecolor="black",
+                       font = FontProperties(family='monospace')):
     tp = TextPath((0.0, 0.0), text, size=1, prop=font)
     bbox = tp.get_extents()
     bwidth = bbox.x1 - bbox.x0
@@ -19,7 +20,7 @@ def make_text_elements(text, x=0.0, y=0.0, width=1.0, height=1.0, color='blue', 
 
 
 def make_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black"):
-    '''
+    """
     Makes a bar plot but each bar is not just a rectangle but an element from the texts list
     :param axes: the axes that is modified
     :param texts: a list of strings, where each element is plotted as a "bar"
@@ -27,7 +28,7 @@ def make_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black
     :param width: the width of the bar. Default: 0.8
     :param colors: A list of colors, a list with a single entry or None. Default: None, which is plotted as blue
     :return: None
-    '''
+    """
     texts = list(texts)
     heights = list(heights)
     n_elem = len(texts)
@@ -47,7 +48,7 @@ def make_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black
 
 
 def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black"):
-    '''
+    """
     Makes a stackedbar plot but each bar is not just a rectangle but an element from the texts list
     :param axes: the axes that is modified
     :param texts: a list of list of strings, where each element is plotted as a "bar"
@@ -55,7 +56,7 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
     :param width: the width of the bar. Default: 0.8
     :param colors:
     :return: None
-    '''
+    """
     if colors is None:
         colors = [['blue'] * len(text) for text in texts]
     elif len(colors) == 1:
@@ -77,24 +78,24 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
 class ConsensusMotifPlotter:
 
     def __init__(self, motif, scale_info_content=True):
-        self.motif  = motif
+        self.n_elem = len(motif)
         self.colors_scheme = {'G': '#ffb300', 'T': '#008000', 'C': '#0000cc', 'A': '#cc0000'}
         self.bases = ['A', 'T', 'G', 'C']
 
         if scale_info_content:
-            self.rel_info = calc_relative_information(self.motif)
+            self.rel_info = calc_relative_information(motif)
         else:
-            self.rel_info = self.motif.counts
+            self.rel_info = motif.counts
 
     def plot(self, axes):
-        '''
+        """
         Add the motif to an axes
         :return: modifies the axes object with all the necessary characters
-        '''
+        """
         basess = []
         scoress = []
         colorss = []
-        for i in range(0, len(self.motif)):
+        for i in range(0, self.n_elem):
             scores = [(b, self.rel_info[b][i], self.colors_scheme[b]) for b in self.bases]
             scores.sort(key=lambda t: t[1])
             basess  += [[x[0] for x in scores]]
