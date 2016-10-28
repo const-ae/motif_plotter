@@ -73,33 +73,47 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
             y_stack += h
 
     axes.autoscale()
+    axes.set_xlim(0, len(texts))
 
 
 class ConsensusMotifPlotter:
 
-    def __init__(self, motif, scale_info_content=True):
-        self.n_elem = len(motif)
-        self.colors_scheme = {'G': '#ffb300', 'T': '#008000', 'C': '#0000cc', 'A': '#cc0000'}
-        self.bases = ['A', 'T', 'G', 'C']
+    def __init__(self, elements, weights, colors=None):
+        self.n_elem = len(elements)
+        self.colors = colors
+        self.elements = elements
+        self.weights = weights
 
+    @classmethod
+    def from_importance_scoring(cls, value):
+        return cls([['A', 'C', 'T', 'G']] * len(value.Sequence), value.Scores,
+                   [['#cc0000', '#0000cc', '#008000','#ffb300']]* len(value.Sequence))
+
+    @classmethod
+    def from_bio_motif(cls, motif, scale_info_content=True):
+        n_elem = len(motif)
+        colors_scheme = {'G': '#ffb300', 'T': '#008000', 'C': '#0000cc', 'A': '#cc0000'}
+        bases = ['A', 'T', 'G', 'C']
         if scale_info_content:
-            self.rel_info = calc_relative_information(motif)
+            rel_info = calc_relative_information(motif)
         else:
-            self.rel_info = motif.counts
+            rel_info = motif.counts
+
+        basess = []
+        scoress = []
+        colorss = []
+        for i in range(0, n_elem):
+            scores = [(b, rel_info[b][i], colors_scheme[b]) for b in bases]
+            scores.sort(key=lambda t: t[1])
+            basess += [[x[0] for x in scores]]
+            scoress += [[x[1] for x in scores]]
+            colorss += [[x[2] for x in scores]]
+        return cls(basess, scoress, colorss)
+
 
     def plot(self, axes):
         """
         Add the motif to an axes
         :return: modifies the axes object with all the necessary characters
         """
-        basess = []
-        scoress = []
-        colorss = []
-        for i in range(0, self.n_elem):
-            scores = [(b, self.rel_info[b][i], self.colors_scheme[b]) for b in self.bases]
-            scores.sort(key=lambda t: t[1])
-            basess  += [[x[0] for x in scores]]
-            scoress += [[x[1] for x in scores]]
-            colorss += [[x[2] for x in scores]]
-
-        make_stacked_bar_plot(axes, basess, scoress, width=1, colors=colorss, edgecolor="none")
+        make_stacked_bar_plot(axes, self.elements, self.weights, width=1, colors=self.colors, edgecolor="none")
