@@ -6,6 +6,27 @@ construct individual plots with letters that represent data.
 
 # Usage
 
+Highlevel API example:
+
+```python
+from Bio import motifs
+
+with open("examples/transfac_motif.txt") as handle:
+    m = motifs.parse(handle, "transfac")
+
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+
+cbp = ConsensusMotifPlotter.from_bio_motif(m[0], scale_info_content=True)
+cbp.plot(ax)
+
+plt.show()
+```
+
+
+Low level API:
+
 ```python
 import matplotlib.pylab as plt
 from motif_plotter import *
