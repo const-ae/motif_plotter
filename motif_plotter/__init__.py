@@ -91,8 +91,9 @@ class ConsensusMotifPlotter:
 
     @classmethod
     def from_weighted_sequence(cls, ws):
-        colors_scheme = {'G': '#ffb300', 'A': '#008000', 'C': '#0000cc', 'T': '#cc0000'}
-        return cls([[x] for x in ws.seq], [[x] for x in ws.scores], [colors_scheme[x] for x in ws.seq])
+        colors_scheme = {'G': '#ffb300', 'A': '#008000', 'C': '#0000cc', 'T': '#cc0000', '_': '#333333'}
+        return cls([[x] if x != '_' else "#" for x in ws.seq], [[x] for x in ws.scores],
+                                    [[colors_scheme[x]] for x in ws.seq])
 
     @classmethod
     def from_bio_motif(cls, motif, scale_info_content=True):
