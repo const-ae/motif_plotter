@@ -76,7 +76,7 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
             elif h < 0:
                 text_shape = make_text_elements(t, x=idx + (1 - width) / 2, y=y_stack_neg, width=width, height=h,
                                                 color=c, edgecolor=edgecolor)
-                y_stack_neg -= h
+                y_stack_neg += h
                 axes.add_patch(text_shape)
 
     axes.autoscale()

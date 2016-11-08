@@ -22,3 +22,21 @@ fig=plt.figure()
 ax=fig.add_subplot(111)
 make_stacked_bar_plot(ax, [list("abcd"), list("defg")], np.array([[1,-2,3,4], [4,0,-2,0]]))
 plt.show()
+
+
+
+
+
+from Bio import motifs
+
+with open("examples/transfac_motif-negative.txt") as handle:
+    m = motifs.parse(handle, "transfac")
+
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+
+cbp = ConsensusMotifPlotter.from_bio_motif(m[0], scale_info_content=False)
+cbp.plot(ax)
+
+plt.show()
