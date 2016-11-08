@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from motif_plotter import *
+import numpy as np
 
 fig=plt.figure()
 ax1=fig.add_subplot(111)
@@ -14,4 +15,10 @@ ax1.add_patch(sentence_shape)
 ax1.add_patch(a_shape)
 ax1.add_patch(b_shape)
 ax1.add_patch(c_shape)
+plt.show()
+
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+make_stacked_bar_plot(ax, [list("abcd"), list("defg")], np.array([[1,-2,3,4], [4,0,-2,0]]))
 plt.show()

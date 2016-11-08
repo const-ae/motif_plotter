@@ -65,12 +65,19 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
     if len(texts) != len(heights):
         raise ValueError("Texts and heights must be of the same length")
     for idx, (text, height, color) in enumerate(zip(texts, heights, colors)):
-        y_stack = 0
+        y_stack_pos = 0
+        y_stack_neg = 0
         for jdx, (t, h, c) in enumerate(zip(text, height, color)):
-            text_shape = make_text_elements(t, x=idx+(1-width)/2, y=y_stack, width=width, height=h,
-                                            color=c, edgecolor=edgecolor)
-            axes.add_patch(text_shape)
-            y_stack += h
+            if h > 0:
+                text_shape = make_text_elements(t, x=idx+(1-width)/2, y=y_stack_pos, width=width, height=h,
+                                                color=c, edgecolor=edgecolor)
+                y_stack_pos += h
+                axes.add_patch(text_shape)
+            elif h < 0:
+                text_shape = make_text_elements(t, x=idx + (1 - width) / 2, y=y_stack_neg, width=width, height=h,
+                                                color=c, edgecolor=edgecolor)
+                y_stack_neg -= h
+                axes.add_patch(text_shape)
 
     axes.autoscale()
     axes.set_xlim(0, len(texts))
