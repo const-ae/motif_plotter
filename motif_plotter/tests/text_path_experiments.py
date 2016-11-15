@@ -66,7 +66,7 @@ ax=fig.add_subplot(111)
 value = deepcopy(data_frame.iloc[1])
 value.Scores = value.Scores[50:100]
 
-value.Scores[1, :] = [0, 1, 2, 0.5]
+value.Scores[1, :] = [1, -2, -0.4, 0.5]
 
 value.Sequence = value.Sequence[50:100]
 cbp = motif_plotter.ConsensusMotifPlotter.from_importance_scoring(value)

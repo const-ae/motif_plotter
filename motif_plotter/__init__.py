@@ -99,7 +99,8 @@ class ConsensusMotifPlotter:
         sorted_nucleotides = np.array(nucleotides)
         sorted_scores = np.array(scores)
         sorted_colors = np.array(colors)
-        for i, order in enumerate(scores.argsort()):
+        order = np.absolute(scores).argsort()
+        for i, order in enumerate(order):
             sorted_scores[i, :] = sorted_scores[i, order]
             sorted_nucleotides[i, :] = sorted_nucleotides[i, order]
             sorted_colors[i, :] = sorted_colors[i, order]
