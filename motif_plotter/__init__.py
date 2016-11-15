@@ -93,8 +93,17 @@ class ConsensusMotifPlotter:
 
     @classmethod
     def from_importance_scoring(cls, value):
-        return cls([['A', 'C', 'T', 'G']] * len(value.Sequence), value.Scores,
-                   [['#008000', '#0000cc', '#cc0000','#ffb300']]* len(value.Sequence))
+        nucleotides = [['A', 'C', 'T', 'G']] * len(value.Sequence)
+        scores = value.Scores
+        colors = [['#008000', '#0000cc', '#cc0000', '#ffb300']] * len(value.Sequence)
+        sorted_nucleotides = np.array(nucleotides)
+        sorted_scores = np.array(scores)
+        sorted_colors = np.array(colors)
+        for i, order in enumerate(scores.argsort()):
+            sorted_scores[i, :] = sorted_scores[i, order]
+            sorted_nucleotides[i, :] = sorted_nucleotides[i, order]
+            sorted_colors[i, :] = sorted_colors[i, order]
+        return cls(sorted_nucleotides, sorted_scores, sorted_colors)
 
     @classmethod
     def from_weighted_sequence(cls, ws):

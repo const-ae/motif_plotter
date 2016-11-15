@@ -40,3 +40,36 @@ cbp = ConsensusMotifPlotter.from_bio_motif(m[0], scale_info_content=False)
 cbp.plot(ax)
 
 plt.show()
+
+
+
+
+import pandas as pd
+from copy import deepcopy
+import motif_plotter
+
+location = []
+sequence = []
+scores = []
+with open("examples/examples_scores.tsv", "rb") as file:
+    for line in file:
+        elem = line.decode("UTF-8").strip().split("\t")
+        location.append(elem[0])
+        sequence.append(elem[1])
+        scores.append(np.array(elem[2:]).reshape((int((len(elem)-2)/4),4)).astype(np.float))
+
+data_frame = pd.DataFrame({"Location": location, "Sequence": sequence, "Scores": scores})
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+
+value = deepcopy(data_frame.iloc[1])
+value.Scores = value.Scores[50:100]
+
+value.Scores[1, :] = [0, 1, 2, 0.5]
+
+value.Sequence = value.Sequence[50:100]
+cbp = motif_plotter.ConsensusMotifPlotter.from_importance_scoring(value)
+cbp.plot(ax)
+
+plt.show()
