@@ -8,6 +8,38 @@ construct individual plots with letters that represent data.
 
 Highlevel API example:
 
+Example of a single sequence:
+```python
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import motif_plotter
+
+# This is a function in cross_aligner/parse_helper.py
+def parse_importance_df(df, col_names):
+    # Iterate over every entry
+    parsed_cols = []
+    for name in col_names:
+        col = df[name].as_matrix()
+        parsed_col = np.apply_along_axis(lambda e: np.array([float(x) for x in e[0][1:-1].split(",")]), 1, col.reshape(len(col),1))
+        parsed_cols.append(parsed_col)
+    return np.stack(parsed_cols, 2)
+
+importance_file = "examples/sequence_only-importances.tsv"
+importance_df = pd.read_csv(importance_file, sep="\t")
+values = parse_importance_df(importance_df, ["A", "T", "C", "G"])
+scores = parse_importance_df(importance_df, ["A_Scores", "T_Scores", "C_Scores", "G_Scores"])
+
+fig=plt.figure()
+ax=fig.add_subplot(111)
+
+motif_plotter.make_single_sequence_spectrum(ax, values[0], scores[0])
+
+plt.show()
+```
+
+
+Example of a ConsensusMotif:
 ```python
 from Bio import motifs
 

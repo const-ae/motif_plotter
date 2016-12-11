@@ -83,6 +83,17 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
     axes.set_xlim(0, len(texts))
 
 
+def make_single_sequence_spectrum(axis, row, row_scores, one_hot_decoding=None, colors=None):
+    if one_hot_decoding is None:
+        one_hot_decoding = ["A", "T", "C", "G"]
+    if colors is None:
+        colors = ['#008000', '#cc0000', '#0000cc', '#ffb300']
+    sequence = [np.array(one_hot_decoding)[x] for x in np.apply_along_axis(np.argmax, 1, row)]
+    score_sequence = np.apply_along_axis(lambda e: np.max(e) if abs(np.min(e)) < np.max(e) else np.min(e), 1, row_scores)
+    color_sequence = [np.array(colors)[x] for x in np.apply_along_axis(np.argmax, 1, row)]
+    make_bar_plot(axis, sequence, score_sequence, colors=color_sequence)
+
+
 class ConsensusMotifPlotter:
 
     def __init__(self, elements, weights, colors=None):

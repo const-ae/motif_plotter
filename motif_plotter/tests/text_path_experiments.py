@@ -73,3 +73,30 @@ cbp = motif_plotter.ConsensusMotifPlotter.from_importance_scoring(value)
 cbp.plot(ax)
 
 plt.show()
+
+
+
+import pandas as pd
+import numpy as np
+import motif_plotter
+
+def parse_importance_df(df, col_names):
+    # Iterate over every entry
+    parsed_cols = []
+    for name in col_names:
+        col = df[name].as_matrix()
+        parsed_col = np.apply_along_axis(lambda e: np.array([float(x) for x in e[0][1:-1].split(",")]), 1, col.reshape(len(col),1))
+        parsed_cols.append(parsed_col)
+    return np.stack(parsed_cols, 2)
+
+importance_file = "examples/sequence_only-importances.tsv"
+importance_df = pd.read_csv(importance_file, sep="\t")
+values = parse_importance_df(importance_df, ["A", "T", "C", "G"])
+scores = parse_importance_df(importance_df, ["A_Scores", "T_Scores", "C_Scores", "G_Scores"])
+
+fig=plt.figure(figsize=(20, 10))
+for i in range(0, 10):
+    ax=fig.add_subplot(10, 1, i+1)
+    motif_plotter.make_single_sequence_spectrum(ax, values[100+i], scores[100+i])
+
+plt.show()
