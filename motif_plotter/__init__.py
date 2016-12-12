@@ -19,7 +19,7 @@ def make_text_elements(text, x=0.0, y=0.0, width=1.0, height=1.0, color='blue', 
     return patches.PathPatch(tp, facecolor=color, edgecolor=edgecolor)
 
 
-def make_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black"):
+def make_bar_plot(axes, texts, heights, width=0.8, colors=None):
     """
     Makes a bar plot but each bar is not just a rectangle but an element from the texts list
     :param axes: the axes that is modified
@@ -43,11 +43,11 @@ def make_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black
     axes.set_xlim(0, n_elem)
     for idx, (text, height, color) in enumerate(zip(texts, heights, colors)):
         text_shape = make_text_elements(text, x=idx+(1-width)/2, y=0, width=width, height=height,
-                                        color=color, edgecolor=edgecolor)
+                                        color=color, edgecolor=color)
         axes.add_patch(text_shape)
 
 
-def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolor="black"):
+def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None):
     """
     Makes a stackedbar plot but each bar is not just a rectangle but an element from the texts list
     :param axes: the axes that is modified
@@ -70,12 +70,12 @@ def make_stacked_bar_plot(axes, texts, heights, width=0.8, colors=None, edgecolo
         for jdx, (t, h, c) in enumerate(zip(text, height, color)):
             if h > 0:
                 text_shape = make_text_elements(t, x=idx+(1-width)/2, y=y_stack_pos, width=width, height=h,
-                                                color=c, edgecolor=edgecolor)
+                                                color=c, edgecolor=c)
                 y_stack_pos += h
                 axes.add_patch(text_shape)
             elif h < 0:
                 text_shape = make_text_elements(t, x=idx + (1 - width) / 2, y=y_stack_neg, width=width, height=h,
-                                                color=c, edgecolor=edgecolor)
+                                                color=c, edgecolor=c)
                 y_stack_neg += h
                 axes.add_patch(text_shape)
 
@@ -150,4 +150,4 @@ class ConsensusMotifPlotter:
         Add the motif to an axes
         :return: modifies the axes object with all the necessary characters
         """
-        make_stacked_bar_plot(axes, self.elements, self.weights, width=1, colors=self.colors, edgecolor="none")
+        make_stacked_bar_plot(axes, self.elements, self.weights, width=1, colors=self.colors)
