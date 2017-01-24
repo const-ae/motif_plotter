@@ -118,10 +118,21 @@ class ConsensusMotifPlotter:
         return cls(sorted_nucleotides, sorted_scores, sorted_colors)
 
     @classmethod
-    def from_new_importance_scoring(cls, values):
-        nucleotides = [['A', 'C', 'T', 'G']] * values.shape[1]
-        scores = values.sum(axis=0)
-        colors = [['#008000', '#0000cc', '#cc0000', '#ffb300']] * values.shape[1]
+    def from_aligned_importance_scoring(cls, values, plot_width=30, start=None, end=None):
+
+        n_seqs = values.shape[0]
+        scores = values.sum(axis=0) / n_seqs
+        if start is None and end is None:
+            if plot_width < scores.shape[0]:
+                total_scores = np.abs(scores).sum(axis=1)
+                start = np.argmax([sum(total_scores[idx:(idx+plot_width)]) for idx in range(0, scores.shape[0]-plot_width)])
+                end = start + plot_width
+            else:
+                start = 0
+                end = scores.shape[0]
+        scores = scores[start:end, :]
+        nucleotides = [["A", "T", "C", "G"]] * len(scores)
+        colors = [['#008000', '#cc0000', '#0000cc', '#ffb300']] * len(scores)
         sorted_nucleotides = np.array(nucleotides)
         sorted_scores = np.array(scores)
         sorted_colors = np.array(colors)
@@ -130,7 +141,7 @@ class ConsensusMotifPlotter:
             sorted_scores[i, :] = sorted_scores[i, order]
             sorted_nucleotides[i, :] = sorted_nucleotides[i, order]
             sorted_colors[i, :] = sorted_colors[i, order]
-        return cls(sorted_nucleotides, sorted_scores, sorted_colors)
+        return cls(sorted_nucleotides, sorted_scores, sorted_colors), start, end
 
     @classmethod
     def from_weighted_sequence(cls, ws):
